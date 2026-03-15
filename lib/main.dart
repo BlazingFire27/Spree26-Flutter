@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:flutter/services.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Run initialization tasks in parallel for better performance
+  await Future.wait([
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
+  ]);
+
+  // Initialize services in parallel
+  await Future.wait([
+    NoScreenshot.instance.screenshotOff(),
+    // Services().initialize(),
+    // Config().initialize(),
+  ]);
+
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
